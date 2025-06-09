@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,16 +57,45 @@ const Index = () => {
 
     setIsGenerating(true);
     
-    // Simulate song generation with a more sophisticated approach
-    setTimeout(() => {
-      const song = generateSongContent(keywords || prompt, genre, decade);
-      setGeneratedSong(song);
-      setIsGenerating(false);
+    try {
+      console.log('Sending request with:', { keywords: keywords || prompt, genre, decade });
+      
+      const response = await fetch('http://localhost:3001/api/generate-song', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          keywords: keywords || prompt,
+          genre,
+          decade,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        throw new Error(errorData.details || 'Failed to generate song');
+      }
+
+      const data = await response.json();
+      console.log('Received response:', data);
+      setGeneratedSong(data.song);
+      
       toast({
         title: "Song Generated!",
         description: `Created a ${genre} song in ${decade} style.`,
       });
-    }, 2000);
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to generate song. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const generateSongContent = (keywordText: string, selectedGenre: string, selectedDecade: string) => {

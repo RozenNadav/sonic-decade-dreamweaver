@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Song Generator</title>
+</head>
+<body>
+    <h1>Test Song Generator</h1>
+    <button onclick="generateSong()">Generate Song</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function generateSong() {
+            try {
+                const response = await fetch('http://localhost:3001/api/generate-song', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        keywords: "summer, love, beach",
+                        genre: "Pop",
+                        decade: "1980s"
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 
