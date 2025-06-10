@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,47 +39,32 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
@@ -99,5 +86,116 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, sans-serif;
+    font-weight: 300;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, sans-serif;
   }
 }
+
+@layer components {
+  /* Enhanced 3D Glassmorphism Cards */
+  .glass-card-3d {
+    @apply relative bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl;
+    @apply hover:bg-white/10 hover:shadow-2xl transition-all duration-500;
+    @apply before:content-[''] before:absolute before:inset-0 before:rounded-3xl;
+    @apply before:bg-gradient-to-br before:from-white/15 before:via-white/5 before:to-transparent before:pointer-events-none;
+    transform: perspective(1000px) rotateX(2deg);
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-card-3d:hover {
+    transform: perspective(1000px) rotateX(0deg) translateY(-5px);
+    box-shadow: 
+      0 35px 60px -12px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* Enhanced 3D Glass Input Fields */
+  .glass-input-3d {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl;
+    @apply focus:bg-white/15 focus:border-white/40 focus:ring-2 focus:ring-white/20;
+    @apply placeholder:text-white/50 text-white;
+    @apply transition-all duration-300;
+    @apply px-4 py-3;
+    box-shadow: 
+      inset 0 2px 10px rgba(0, 0, 0, 0.1),
+      0 4px 20px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-input-3d:focus {
+    box-shadow: 
+      inset 0 2px 10px rgba(0, 0, 0, 0.15),
+      0 8px 30px rgba(0, 0, 0, 0.15),
+      0 0 0 2px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Enhanced 3D Glass Buttons */
+  .glass-button-3d {
+    @apply bg-gradient-to-r from-purple-500/80 via-pink-500/80 to-blue-500/80 backdrop-blur-sm;
+    @apply border border-white/30 text-white font-medium rounded-2xl;
+    @apply hover:from-purple-600/90 hover:via-pink-600/90 hover:to-blue-600/90 hover:shadow-2xl;
+    @apply hover:scale-105 active:scale-95;
+    @apply transition-all duration-300;
+    box-shadow: 
+      0 10px 30px rgba(139, 92, 246, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-button-secondary-3d {
+    @apply bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-2xl;
+    @apply hover:bg-white/20 hover:shadow-xl;
+    @apply hover:scale-105 active:scale-95;
+    @apply transition-all duration-300;
+    box-shadow: 
+      0 8px 25px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* Enhanced 3D Glass Content Areas */
+  .glass-content-3d {
+    @apply bg-white/5 backdrop-blur-md rounded-2xl border border-white/10;
+    @apply p-6 max-h-96 overflow-auto;
+    @apply scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent;
+    box-shadow: 
+      inset 0 2px 20px rgba(0, 0, 0, 0.1),
+      0 4px 20px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Enhanced 3D Glass Dropdown */
+  .glass-dropdown-3d {
+    @apply bg-slate-900/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl;
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Custom Scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-thumb-white\/20::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+  }
+  
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+} 

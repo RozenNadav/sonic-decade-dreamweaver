@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
+import path from 'path';
 
-dotenv.config();
+// Configure dotenv with the correct path
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -22,6 +24,9 @@ app.use(express.json());
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
+
+// Log to verify API key is loaded (but don't log the actual key)
+console.log('API Key loaded:', process.env.OPENAI_API_KEY ? 'Yes' : 'No');
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

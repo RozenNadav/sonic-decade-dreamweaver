@@ -3,11 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Music, Headphones } from "lucide-react";
+import { Music, Headphones, Sparkles, Wand2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import SongGenerator from "@/components/SongGenerator";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
@@ -27,7 +25,6 @@ const Index = () => {
   ];
 
   const extractKeywords = (text: string) => {
-    // Simple keyword extraction - remove common words and split by spaces
     const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'was', 'are', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should'];
     const words = text.toLowerCase().split(/\s+/).filter(word => 
       word.length > 2 && !commonWords.includes(word) && /^[a-zA-Z]+$/.test(word)
@@ -58,8 +55,6 @@ const Index = () => {
     setIsGenerating(true);
     
     try {
-      console.log('Sending request with:', { keywords: keywords || prompt, genre, decade });
-      
       const response = await fetch('http://localhost:3001/api/generate-song', {
         method: 'POST',
         headers: {
@@ -68,29 +63,25 @@ const Index = () => {
         body: JSON.stringify({
           keywords: keywords || prompt,
           genre,
-          decade,
-        }),
+          decade
+        })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error response:', errorData);
-        throw new Error(errorData.details || 'Failed to generate song');
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-      const data = await response.json();
-      console.log('Received response:', data);
       setGeneratedSong(data.song);
-      
       toast({
         title: "Song Generated!",
         description: `Created a ${genre} song in ${decade} style.`,
       });
     } catch (error) {
-      console.error('Error:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to generate song. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate song",
         variant: "destructive",
       });
     } finally {
@@ -99,7 +90,6 @@ const Index = () => {
   };
 
   const generateSongContent = (keywordText: string, selectedGenre: string, selectedDecade: string) => {
-    // Enhanced song generation logic based on genre and decade
     const keywordList = keywordText.split(",").map(k => k.trim()).filter(k => k);
     
     const genreStyles = {
@@ -187,113 +177,165 @@ Genre: ${selectedGenre} | Era: ${selectedDecade}`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-2">
-            <Music className="h-8 w-8 text-purple-600" />
-            <h1 className="text-4xl font-bold text-gray-900">AI Song Generator</h1>
-            <Headphones className="h-8 w-8 text-purple-600" />
-          </div>
-          <p className="text-xl text-gray-600">Create unique songs based on your prompts, keywords, genre, and era</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Song Input</CardTitle>
-              <CardDescription>Describe your song concept and preferences</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="prompt">Song Prompt</Label>
-                <Textarea
-                  id="prompt"
-                  placeholder="Describe your song concept, story, or theme..."
-                  value={prompt}
-                  onChange={(e) => handlePromptChange(e.target.value)}
-                  rows={3}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="keywords">Extracted Keywords</Label>
-                <Input
-                  id="keywords"
-                  placeholder="Keywords will be extracted automatically..."
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Genre</Label>
-                  <Select value={genre} onValueChange={setGenre}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select genre" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {genres.map((g) => (
-                        <SelectItem key={g} value={g}>{g}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Decade</Label>
-                  <Select value={decade} onValueChange={setDecade}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select decade" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {decades.map((d) => (
-                        <SelectItem key={d} value={d}>{d}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <Button 
-                onClick={generateSong} 
-                disabled={isGenerating} 
-                className="w-full"
-                size="lg"
-              >
-                {isGenerating ? "Generating Song..." : "Generate Song"}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-pink-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-purple-400/10 rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div className="absolute top-1/3 right-1/3 w-32 h-32 bg-cyan-400/20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-1/3 left-1/2 w-40 h-40 bg-yellow-400/10 rounded-full blur-2xl"></div>
+      </div>
+      
+      <div className="relative z-10 p-6 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="text-center space-y-8 mb-16 group">
+            <div className="space-y-4">
+              <h1 className="text-6xl md:text-7xl font-thin text-white tracking-tight">
+                Artist creation,
+              </h1>
+              <h2 className="text-6xl md:text-7xl font-bold text-white tracking-tight">
+                with AI On artist
+              </h2>
+            </div>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed">
+              Transform your creative vision into unique songs with AI-powered generation. 
+              Simply describe your concept and watch it come to life.
+            </p>
+            <div className="flex items-center justify-center gap-4 pt-4">
+              <Button className="glass-button-3d px-8 py-3 text-lg font-medium">
+                <Wand2 className="h-5 w-5 mr-2" />
+                Start Creating
               </Button>
-            </CardContent>
-          </Card>
+              <Button 
+                variant="outline" 
+                className="glass-button-secondary-3d px-8 py-3 text-lg font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              >
+                Learn More
+              </Button>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Generated Song</CardTitle>
-              <CardDescription>Your AI-generated song will appear here</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {generatedSong ? (
-                <div className="space-y-4">
-                  <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg border overflow-auto max-h-96">
-                    {generatedSong}
-                  </pre>
-                  <Button variant="outline" className="w-full">
-                    Share Song
+          {/* Main Content */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Input Section */}
+            <div className="glass-card-3d group">
+              <div className="p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white">Song Input</h3>
+                    <p className="text-white/70 font-light">Describe your song concept</p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="prompt" className="text-white font-medium">Song Prompt</Label>
+                    <Textarea
+                      id="prompt"
+                      placeholder="Describe your song concept, story, or theme..."
+                      value={prompt}
+                      onChange={(e) => handlePromptChange(e.target.value)}
+                      rows={4}
+                      className="glass-input-3d text-white placeholder:text-white/50 bg-white/10 backdrop-blur-md border-white/20"
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label htmlFor="keywords" className="text-white font-medium">Keywords</Label>
+                    <Input
+                      id="keywords"
+                      placeholder="Keywords will be extracted automatically..."
+                      value={keywords}
+                      onChange={(e) => setKeywords(e.target.value)}
+                      className="glass-input-3d text-white placeholder:text-white/50 bg-white/10 backdrop-blur-md border-white/20"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <Label className="text-white font-medium">Genre</Label>
+                      <Select value={genre} onValueChange={setGenre}>
+                        <SelectTrigger className="glass-input-3d text-white bg-white/10 backdrop-blur-md border-white/20">
+                          <SelectValue placeholder="Select genre" />
+                        </SelectTrigger>
+                        <SelectContent className="glass-dropdown-3d">
+                          {genres.map((g) => (
+                            <SelectItem key={g} value={g} className="text-white hover:bg-white/10 focus:bg-white/10">{g}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-white font-medium">Decade</Label>
+                      <Select value={decade} onValueChange={setDecade}>
+                        <SelectTrigger className="glass-input-3d text-white bg-white/10 backdrop-blur-md border-white/20">
+                          <SelectValue placeholder="Select decade" />
+                        </SelectTrigger>
+                        <SelectContent className="glass-dropdown-3d">
+                          {decades.map((d) => (
+                            <SelectItem key={d} value={d} className="text-white hover:bg-white/10 focus:bg-white/10">{d}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <Button 
+                    onClick={generateSong}
+                    disabled={isGenerating}
+                    className="glass-button-3d w-full py-6 text-lg font-medium"
+                  >
+                    {isGenerating ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Generating...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Music className="h-5 w-5" />
+                        Generate Song
+                      </div>
+                    )}
                   </Button>
                 </div>
-              ) : (
-                <div className="text-center text-gray-500 py-8">
-                  <Music className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Your generated song will appear here...</p>
+              </div>
+            </div>
+
+            {/* Output Section */}
+            <div className="glass-card-3d group">
+              <div className="p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl">
+                    <Headphones className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white">Generated Song</h3>
+                    <p className="text-white/70 font-light">Your AI-created masterpiece</p>
+                  </div>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+
+                <div className="glass-content-3d">
+                  {generatedSong ? (
+                    <pre className="text-white/90 font-mono text-sm whitespace-pre-wrap">{generatedSong}</pre>
+                  ) : (
+                    <div className="text-center py-12">
+                      <p className="text-white/50 text-lg">Your generated song will appear here</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Index;
+export default Index; 
