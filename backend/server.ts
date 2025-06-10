@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
@@ -24,12 +24,12 @@ const openai = new OpenAI({
 });
 
 // Health check endpoint
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
 // Song generation endpoint
-app.post('/api/generate-song', async (req: Request, res: Response) => {
+app.post('/api/generate-song', async (req, res) => {
   try {
     const { keywords, genre, decade } = req.body;
 
