@@ -4,15 +4,15 @@ import dotenv from 'dotenv';
 import OpenAI from 'openai';
 import path from 'path';
 
-// Configure dotenv with the correct path
-dotenv.config({ path: path.join(__dirname, '.env') });
+// Configure dotenv to look for .env file in the correct location
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://127.0.0.1:8080'], // Allow both localhost and 127.0.0.1
+  origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:80', 'http://127.0.0.1:80'], // Allow both localhost and 127.0.0.1
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
